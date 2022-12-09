@@ -36,6 +36,30 @@ class Board:
                     width=1
                 )
 
+    def get_click(self, mouse_pos):
+        cell = self.get_cell(mouse_pos)
+        if cell is None:
+            # Пользователь нажал мимо поля, поэтому ничего не делать
+            return
+        self.on_click(cell)
+
+    def get_cell(self, mouse_pos):
+        mx, my = mouse_pos
+        if mx <= self.left or mx >= self.width * self.cell_size + self.left:
+            print("Пользователь нажал слишком слева или слишком справа")
+            return
+        if my <= self.top or my >= self.height * self.cell_size + self.top:
+            print("Пользователь нажал слишком высоко или слишком низко")
+            return
+        print("Пользователь внутри поля")
+
+        column = (mx - self.left) // self.cell_size
+        row = (my - self.top) // self.cell_size
+        return row, column
+
+    def on_click(self, cell):
+        print(f"Пользователь нажал на клетку {cell}")
+
 
 def main():
     pygame.display.set_caption('Наш проект')
@@ -44,14 +68,16 @@ def main():
     clock = pygame.time.Clock()
     running = True
 
-    # поле 5 на 7
-    board = Board(4, 3)
-    board.set_view(300, 100, 80)
+    board = Board(5, 6)
+    board.set_view(100, 50, 30)
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
                 break
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    board.get_click(event.pos)
 
         screen.fill('black')
         board.render(screen)
