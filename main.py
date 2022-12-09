@@ -59,6 +59,14 @@ class Board:
 
     def on_click(self, cell):
         print(f"Пользователь нажал на клетку {cell}")
+        row, col = cell
+        value = self.board[row][col]
+        if value == 0:
+            self.board[row][col] = 1
+        elif value == 1:
+            self.board[row][col] = 0
+        else:
+            raise Exception("Что-то пошло не так. В клетке поля хранится не 0 или 1")
 
 
 def main():
